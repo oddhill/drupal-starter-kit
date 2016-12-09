@@ -14,7 +14,7 @@ First you need to [https://getcomposer.org/doc/00-intro.md#installation-linux-un
 After you have installed composer or if you already have composer installed you can run the following command to get a copy of the starter kit:
 
 ```
-composer create-project oddhill/odddrupal:8.x ./project-dir --stability dev --no-interaction
+composer create-project oddhill/drupal-starter-kit ./project-dir --stability dev --no-interaction
 ```
 
 ## Composer scripts
