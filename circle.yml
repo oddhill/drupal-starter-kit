@@ -1,0 +1,44 @@
+##
+# Configuration file for CircleCi.
+#
+# Learn more at: https://circleci.com/docs/configuration/
+##
+
+dependencies:
+  cache_directories:
+    - ~/.composer/cache
+
+machine:
+  node:
+    version: 6.7
+  php:
+    version: 5.5.36
+
+test:
+  pre:
+    - mkdir $CIRCLE_TEST_REPORTS/phpcs
+  override:
+    - vendor/bin/phpcs --standard=$DRUPAL_CS_PATH --extensions=$DRUPAL_CS_EXTS --report-junit=$CIRCLE_TEST_REPORTS/phpcs/junit.xml $DRUPAL_CS_PATHS:
+        environment:
+          DRUPAL_CS_PATH: ./vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
+          DRUPAL_CS_EXTS: php,module,theme
+          DRUPAL_CS_PATHS: public/themes
+
+deployment:
+  staging:
+    branch: develop
+    commands:
+      - rsync -az --force --delete --exclude-from=.rsyncignore -e 'ssh' ./ $SERVER_USER@$SERVER_NAME.se:$SERVER_PATH:
+          environment:
+            SERVER_USER: root
+            SERVER_NAME: example.com
+            SERVER_PATH: /mnt/persist/www/staging-folder-name
+
+  production:
+    branch: master
+    commands:
+      - rsync -az --force --delete --exclude-from=.rsyncignore -e 'ssh' ./ $SERVER_USER@$SERVER_NAME.se:$SERVER_PATH:
+          environment:
+            SERVER_USER: root
+            SERVER_NAME: example.com
+            SERVER_PATH: /mnt/persist/www/staging-folder-name

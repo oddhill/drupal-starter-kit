@@ -1,0 +1,58 @@
+{
+    "name": "oddhill/drupal-starter-kit",
+    "description": "Starter kit when creating a new site based on Drupal 8.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christoffer Palm <christoffer.palm@oddhill.se>",
+            "role": "Developer"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.drupal-composer.org"
+        }
+    ],
+    "require": {
+        "composer/installers": "^1.0.20",
+        "drupal-composer/drupal-scaffold": "^2.0.1",
+        "cweagans/composer-patches": "~1.0",
+        "drupal/core": "~8.0",
+        "drush/drush": "~8.0",
+        "drupal/console": "~1.0",
+        "vlucas/phpdotenv": "^2.3",
+        "composer/composer": "^1.2"
+    },
+    "require-dev": {},
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+      "psr-4": {
+        "OddDrupal\\": "scripts/odddrupal/"
+      }
+    },
+    "scripts": {
+        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "key-generate": "OddDrupal\\KeyGenerator::generateAppKey",
+        "create-files": "OddDrupal\\InstallationManager::createRequiredFiles",
+        "post-create-project-cmd": [
+            "OddDrupal\\InstallationManager::createRequiredFiles",
+            "OddDrupal\\KeyGenerator::generateAppKey"
+        ]
+    },
+    "extra": {
+        "installer-paths": {
+            "public/core": ["type:drupal-core"],
+            "public/libraries/{$name}": ["type:drupal-library"],
+            "public/modules/contrib/{$name}": ["type:drupal-module"],
+            "public/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "public/themes/contrib/{$name}": ["type:drupal-theme"],
+            "drush/contrib/{$name}": ["type:drupal-drush"]
+        }
+    }
+}
