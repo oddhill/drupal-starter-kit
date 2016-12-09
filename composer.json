@@ -23,7 +23,8 @@
         "drush/drush": "~8.0",
         "drupal/console": "~1.0",
         "vlucas/phpdotenv": "^2.3",
-        "composer/composer": "^1.2"
+        "composer/composer": "^1.2",
+        "oddhill/oddprofile": "^1.0"
     },
     "require-dev": {},
     "conflict": {
