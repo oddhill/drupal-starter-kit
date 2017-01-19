@@ -28,7 +28,7 @@ deployment:
   staging:
     branch: develop
     commands:
-      - rsync -az --force --delete --exclude-from=.rsyncignore -e 'ssh' ./ $SERVER_USER@$SERVER_NAME.se:$SERVER_PATH:
+      - rsync -az --force --delete --exclude-from=.rsyncignore -e 'ssh' ./ $SERVER_USER@$SERVER_NAME:$SERVER_PATH:
           environment:
             SERVER_USER: root
             SERVER_NAME: example.com
@@ -37,7 +37,7 @@ deployment:
   production:
     branch: master
     commands:
-      - rsync -az --force --delete --exclude-from=.rsyncignore -e 'ssh' ./ $SERVER_USER@$SERVER_NAME.se:$SERVER_PATH:
+      - rsync -az --force --delete --exclude-from=.rsyncignore -e 'ssh' ./ $SERVER_USER@$SERVER_NAME:$SERVER_PATH:
           environment:
             SERVER_USER: root
             SERVER_NAME: example.com
