@@ -44,10 +44,11 @@ class InstallationManager {
   public static function createRequiredFiles(Event $event) {
     $fs = new Filesystem();
 
-    self::createDirectories($fs);
+    self::createDirectories($event, $fs);
     self::prepareSettingsFile($event, $fs);
     self::prepareServicesFile($event, $fs);
     self::createFilesDirectory($event, $fs);
+    self::copyEnvironmentVariables($event, $fs);
   }
 
   /**
@@ -59,26 +60,37 @@ class InstallationManager {
   protected static function copyEnvironmentVariables(Event $event, Filesystem $fs) {
     $cwd = self::getCurrentWorkdingDirectory();
 
-    if ($fs->exists("{$cwd}/.env.default")) {
+    if ($fs->exists("{$cwd}/.env")) {
+      $event->getIO()->write("The env file already exists.");
+
       return;
+    }
+
+    if (!$fs->exists("{$cwd}/.env.default")) {
+      $event->getIO()
+        ->writeError('Could not copy the env file because it does not exist.');
     }
 
     $fs->copy("{$cwd}/.env.default", "{$cwd}/.env");
 
-    $event->getIO()->write("Copied the default '.env.default' file to the local '.env' file.");
+    $event->getIO()
+      ->write("Copied the default '.env.default' file to the local '.env' file.");
   }
 
   /**
    * Creates the directories defined in the directories array if they do not
    * exist.
    *
+   * @param Event $event
    * @param Filesystem $fs
    */
-  protected static function createDirectories(Filesystem $fs) {
+  protected static function createDirectories(Event $event, Filesystem $fs) {
     $root = self::getDrupalRoot();
 
     foreach (self::$directories as $directory) {
       if ($fs->exists("{$root}/{$directory}")) {
+        $event->getIO()->write("The {$directory} directory already exists.");
+
         continue;
       }
 
@@ -97,6 +109,8 @@ class InstallationManager {
     $root = self::getDrupalRoot();
 
     if ($fs->exists("{$root}/sites/default/files")) {
+      $event->getIO()->write('Files folder already exists.');
+
       return;
     }
 
@@ -117,6 +131,15 @@ class InstallationManager {
     $root = self::getDrupalRoot();
 
     if ($fs->exists("{$root}/sites/default/settings.php") && $fs->exists("{$root}/sites/default/default.settings.php")) {
+      $event->getIO()->write('Settings file already exists.');
+
+      return;
+    }
+
+    if (!$fs->exists("{$root}/sites/default/default.settings.php")) {
+      $event->getIO()
+        ->writeError('Could not copy the default settings file because it does not exist.');
+
       return;
     }
 
@@ -136,6 +159,15 @@ class InstallationManager {
     $root = self::getDrupalRoot();
 
     if ($fs->exists("{$root}/sites/default/services.yml") && $fs->exists("{$root}/sites/default/default.services.yml")) {
+      $event->getIO()->write('Services file already exists.');
+
+      return;
+    }
+
+    if (!$fs->exists("{$root}/sites/default/default.services.yml")) {
+      $event->getIO()
+        ->writeError('Could not copy the default services file because it does not exist.');
+
       return;
     }
 
