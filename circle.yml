@@ -18,10 +18,11 @@ test:
   pre:
     - mkdir $CIRCLE_TEST_REPORTS/phpcs
   override:
-    - vendor/bin/phpcs --standard=$DRUPAL_CS_PATH --extensions=$DRUPAL_CS_EXTS --report-junit=$CIRCLE_TEST_REPORTS/phpcs/junit.xml $DRUPAL_CS_PATHS:
+    - vendor/bin/phpcs --standard=$DRUPAL_CS_PATH --extensions=$DRUPAL_CS_EXTS --ignore=$DRUPAL_CS_IGNORE --report-junit=$CIRCLE_TEST_REPORTS/phpcs/junit.xml $DRUPAL_CS_PATHS:
         environment:
           DRUPAL_CS_PATH: ./vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
           DRUPAL_CS_EXTS: php,module,theme
+          DRUPAL_CS_IGNORE: node_modules,build
           DRUPAL_CS_PATHS: public/themes
 
 deployment:
