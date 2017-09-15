@@ -50,42 +50,20 @@ $settings['hash_salt'] = getenv('APP_KEY');
 $settings['install_profile'] = '';
 
 /**
- * Show all error messages, with backtrace information.
- *
- * In case the error level could not be fetched from the database, as for
- * example the database connection failed, we rely only on this value.
+ * Load services definition file.
  */
-# $config['system.logging']['error_level'] = 'verbose';
-
-/**
- * Enable access to rebuild.php.
- *
- * This setting can be enabled to allow Drupal's php and database cached
- * storage to be cleared via the rebuild.php page. Access to this page can also
- * be gained by generating a query string from rebuild_token_calculator.sh and
- * using these parameters in a request to rebuild.php.
- */
-# $settings['rebuild_access'] = TRUE;
-
-/**
-* Load services definition file.
-*/
 $settings['container_yamls'][] = __DIR__ . '/services.yml';
 
 /**
-* Load local development override configuration, if available.
-*
-* Use settings.local.php to override variables on secondary (staging,
-* development, etc) installations of this site. Typically used to disable
-* caching, JavaScript/CSS compression, re-routing of outgoing emails, and
-* other things that should not happen on development and testing sites.
-*
-* Keep this code block at the end of this file to take full effect.
-*/
-$environments = ['local', 'development', 'staging', 'production'];
-
-foreach ($environments as $environment) {
-  if (file_exists(__DIR__ . "/settings.{$environment}.php")) {
-    include __DIR__ . "/settings.{$environment}.php";
-  }
+ * Load local development override configuration, if available.
+ *
+ * Use settings.local.php to override variables on secondary (staging,
+ * development, etc) installations of this site. Typically used to disable
+ * caching, JavaScript/CSS compression, re-routing of outgoing emails, and
+ * other things that should not happen on development and testing sites.
+ *
+ * Keep this code block at the end of this file to take full effect.
+ */
+ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.php';
 }
