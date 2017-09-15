@@ -1,0 +1,50 @@
+version: '2'
+
+services:
+  mariadb:
+    image: wodby/mariadb:10.1-2.0.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    volumes:
+      - ~/data/drupal:/var/lib/mysql
+    ports:
+      - 33060:3306
+
+  php:
+    image: wodby/drupal-php:7.1-2.0.0
+    environment:
+      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
+      DB_HOST: mariadb
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: drupal
+      DB_DRIVER: mysql
+      PHP_XDEBUG: 1
+      PHP_XDEBUG_DEFAULT_ENABLE: 1
+    volumes:
+      - drupal-docker-sync:/var/www/html:nocopy
+
+  nginx:
+    image: wodby/drupal-nginx:8-1.10-2.0.0
+    depends_on:
+      - php
+    environment:
+      NGINX_STATIC_CONTENT_OPEN_FILE_CACHE: "off"
+      NGINX_ERROR_LOG_LEVEL: debug
+      NGINX_BACKEND_HOST: php
+      NGINX_SERVER_ROOT: /var/www/html/public
+    volumes:
+      - drupal-docker-sync:/var/www/html:nocopy
+    ports:
+      - 8000:80
+
+  mailhog:
+    image: mailhog/mailhog
+
+# Docker-sync for mac users.
+volumes:
+  drupal-docker-sync:
+    external: true

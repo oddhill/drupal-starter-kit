@@ -1,0 +1,14 @@
+version: '2'
+
+syncs:
+  drupal-docker-sync:
+    src: './'
+    sync_userid: '82'
+    sync_excludes_type: 'Name'
+    sync_excludes: [
+      '.gitignore',
+      '.git',
+      '.idea',
+      '.vscode',
+      'node_modules',
+    ]
