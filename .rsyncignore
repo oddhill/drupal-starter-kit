@@ -1,0 +1,4 @@
+/public/sites/*/files
+/public/sites/*/settings.local.php
+/.env
+/public/.htaccess
