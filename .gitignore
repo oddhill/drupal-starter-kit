@@ -13,7 +13,8 @@
 /public/profiles/contrib
 
 # Ignore Drupal's file directory
-public/sites/*/files
+/public/sites/*/files
 
 # Ignore local environment settings
 .env
+/public/sites/*/settings.local.php
