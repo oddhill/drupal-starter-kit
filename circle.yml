@@ -32,7 +32,7 @@ deployment:
           environment:
             SERVER_USER: root
             SERVER_NAME: example.com
-            SERVER_PATH: /mnt/persist/www/staging-folder-name
+            SERVER_PATH: /mnt/persist/www/site-folder-name
 
   production:
     branch: master
@@ -41,4 +41,4 @@ deployment:
           environment:
             SERVER_USER: root
             SERVER_NAME: example.com
-            SERVER_PATH: /mnt/persist/www/staging-folder-name
+            SERVER_PATH: /mnt/persist/www/site-folder-name
