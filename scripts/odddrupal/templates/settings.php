@@ -8,7 +8,7 @@
 /**
  * Load environment variables.
  */
-$dotenv = new Dotenv\Dotenv(DRUPAL_ROOT . '/../');
+$dotenv = new Dotenv\Dotenv($app_root . '/../');
 $dotenv->load();
 
 /**
@@ -29,15 +29,12 @@ $databases['default']['default'] = [
  * Activate Reroute Email if environment hasn't been set to production.
  *
  * These settings will make sure that no emails are sent for environments other
- * than production, but you'll need to copy these to settings.local.php in
- * order to reroute to an address which you've got access to.
- *
- * Note that his configuration requires that the re-route email module is
- * installed, otherwise emails will be sent like normal.
+ * than production, but you'll need to copy these to settings.local.php in order
+ * to reroute to an address which you've got access to.
  */
 if (getenv('APP_ENV') !== 'production') {
   $config['reroute_email.settings']['reroute_email_enable'] = TRUE;
-  $config['reroute_email.settings']['reroute_email_address'] = 'your.name@example.com';
+  $config['reroute_email.settings']['reroute_email_address'] = getenv('REROUTE_EMAIL_ADDRESS');
   $config['reroute_email.settings']['reroute_email_enable_message'] = TRUE;
 }
 
@@ -45,7 +42,7 @@ if (getenv('APP_ENV') !== 'production') {
  * Location of the site configuration files.
  */
 $config_directories = [
-  CONFIG_SYNC_DIRECTORY => DRUPAL_ROOT . '/../config',
+  CONFIG_SYNC_DIRECTORY => $app_root . '/../config',
 ];
 
 /**
@@ -68,7 +65,7 @@ $settings['install_profile'] = '';
 /**
  * Load services definition file.
  */
-$settings['container_yamls'][] = __DIR__ . '/services.yml';
+$settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
 
 /**
  * Load local development override configuration, if available.
@@ -80,6 +77,6 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
  *
  * Keep this code block at the end of this file to take full effect.
  */
- if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
