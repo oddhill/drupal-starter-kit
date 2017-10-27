@@ -26,6 +26,19 @@ $databases['default']['default'] = [
 ];
 
 /**
+ * Activate Reroute Email if environment hasn't been set to production.
+ *
+ * These settings will make sure that no emails are sent for environments other
+ * than production, but you'll need to copy these to settings.local.php in order
+ * to reroute to an address which you've got access to.
+ */
+if (getenv('APP_ENV') !== 'production') {
+  $config['reroute_email.settings']['reroute_email_enable'] = TRUE;
+  $config['reroute_email.settings']['reroute_email_address'] = getenv('REROUTE_EMAIL_ADDRESS');
+  $config['reroute_email.settings']['reroute_email_enable_message'] = TRUE;
+}
+
+/**
  * Location of the site configuration files.
  */
 $config_directories = [
