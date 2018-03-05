@@ -31,7 +31,7 @@
         "cweagans/composer-patches": "^1.0",
         "drupal-composer/drupal-scaffold": "^2.0",
         "drupal/console": "^1.0",
-        "drush/drush": "^8.0",
+        "drush/drush": "^9.0",
         "drupal/coder": "^8.0"
     },
     "conflict": {
