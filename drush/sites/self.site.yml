@@ -1,0 +1,21 @@
+##
+# Drush aliases for the deault site
+#
+# These aliases can be used by either adding @self.testing or by just adding
+# @testing to the Drush command.
+#
+# Read more about Drush alias files here:
+# https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.site.yml
+##
+
+testing:
+  host: example.com
+  root: /var/www/html
+  uri: http://example.com
+  user: root
+
+production:
+  host: example.com
+  root: /var/www/html
+  uri: http://example.com
+  user: root

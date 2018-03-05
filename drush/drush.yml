@@ -1,0 +1,9 @@
+##
+# Drush Configuration
+#
+# This file contains various settings that helps Drush run commands properly
+# for the site.
+##
+
+options:
+  root: ./../public
