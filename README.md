@@ -6,8 +6,8 @@ when creating new projects.
 
 ## Notable features
 
-- Used vlucas/phpdotenv to load local environment configuration.
-- Automatically updates the drupal scaffolding with drupal-composer/drupal-scaffold.
+- Uses [vlucas/phpdotenv](vlucas/phpdotenv) to load local environment configuration.
+- Automatically updates the drupal scaffolding with [drupal-composer/drupal-scaffold](https://github.com/drupal-composer/drupal-scaffold).
 
 ## Getting started
 
