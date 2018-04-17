@@ -33,9 +33,8 @@ $databases['default']['default'] = [
  * to reroute to an address which you've got access to.
  */
 if (getenv('APP_ENV') !== 'production') {
-  $config['reroute_email.settings']['reroute_email_enable'] = TRUE;
-  $config['reroute_email.settings']['reroute_email_address'] = getenv('REROUTE_EMAIL_ADDRESS');
-  $config['reroute_email.settings']['reroute_email_enable_message'] = TRUE;
+  $config['reroute_email.settings']['enable'] = TRUE;
+  $config['reroute_email.settings']['address'] = getenv('REROUTE_EMAIL_ADDRESS');
 }
 
 /**
