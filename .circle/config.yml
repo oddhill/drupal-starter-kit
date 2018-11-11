@@ -1,0 +1,123 @@
+##
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+##
+
+version: 2.1
+
+##
+# Orbs
+##
+
+orbs:
+  deploy: oddhill/deploy@0.0.2
+  drupal: oddhill/drupal-8@0.0.5
+
+##
+# Aliases
+##
+
+# Alias with defaults used in most steps
+defaults: &defaults
+  docker:
+    - image: circleci/php:7.2-cli-node-browsers
+  working_directory: ~/repo
+
+# Alias to restore cache
+restore_cache: &restore_cache
+  keys:
+    - v1-composer-{{ checksum "composer.lock" }}
+    # fallback to using the latest cache if no exact match is found
+    - v1-composer-
+
+# Alias to save cache
+save_cache: &save_cache
+  key: v1-composer-{{ checksum "composer.lock" }}
+  paths:
+    - vendor
+    - public/core
+    - public/libraries
+    - public/modules/contrib
+    - public/profiles/contrib
+    - public/themes/contrib
+
+# Update composer and install dependencies
+composer_dependencies: &composer_dependencies
+  name: Updating composer and installing dependencies
+  command: |
+    sudo composer self-update
+    composer install -n --prefer-dist --ignore-platform-reqs
+
+##
+# Jobs
+##
+
+jobs:
+  # Install composer dependencies
+  dependencies:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache: *restore_cache
+      - run: *composer_dependencies
+      - save_cache: *save_cache
+
+  # Check coding standards with PHPCS
+  phpcs:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache: *restore_cache
+      - drupal/phpcs
+
+  # Deploy to testing
+  testing:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache: *restore_cache
+      - deploy/ssh:
+          hostname: stage.example.com
+          remote-path: /var/www/stage.example.com
+          user: root
+      - drupal/drush-post-deploy:
+          alias: testing
+
+  # Deploy to production
+  production:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache: *restore_cache
+      - deploy/ssh:
+          hostname: www.example.com
+          remote-path: /var/www/www.example.com
+          user: root
+      - drupal/drush-post-deploy:
+          alias: production
+
+##
+# Workflows
+##
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - dependencies
+      - phpcs:
+          requires:
+            - dependencies
+      - testing:
+          requires:
+            - phpcs
+          filters:
+            branches:
+              only: develop
+      - production:
+          requires:
+            - phpcs
+          filters:
+            branches:
+              only: master
