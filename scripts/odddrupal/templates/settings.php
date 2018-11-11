@@ -5,11 +5,20 @@
  * Contains site specific settings.
  */
 
+use Symfony\Component\Debug\Debug;
+
 /**
  * Load environment variables.
  */
 $dotenv = new Dotenv\Dotenv($app_root . '/../');
 $dotenv->load();
+
+/**
+ * Enable improved debugging in the development environment.
+ */
+if (getenv('APP_ENV') === 'development') {
+  Debug::enable();
+}
 
 /**
  * Database settings.
