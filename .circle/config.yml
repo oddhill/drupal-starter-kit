@@ -21,7 +21,7 @@ orbs:
 # Alias with defaults used in most steps
 defaults: &defaults
   docker:
-    - image: circleci/php:7.2-cli-node-browsers
+    - image: circleci/php:7.4-cli-node-browsers
   working_directory: ~/repo
 
 # Alias to restore cache
