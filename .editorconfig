@@ -1,20 +1,17 @@
-# This file is for unifying the coding style for various code editors and IDEs.
-# Make sure to have an editorconfig plug-in installed in your editor to have
-# the editor use this file.
+# Drupal editor configuration normalization
+# @see http://editorconfig.org/
 
-# Sets this config file to be the top-most one.
+# This is the top-most .editorconfig file; do not search in parent directories.
 root = true
 
+# All files.
 [*]
-charset = utf-8
-end_of_line = lf
+end_of_line = LF
 indent_style = space
 indent_size = 2
-insert_final_newline = true
+charset = utf-8
 trim_trailing_whitespace = true
+insert_final_newline = true
 
-[*.md]
-trim_trailing_whitespace = false
-
-[composer.json]
+[composer.{json,lock}]
 indent_size = 4
