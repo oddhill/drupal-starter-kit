@@ -13,70 +13,101 @@ version: 2.1
 orbs:
   deploy: oddhill/deploy@0.0.2
   drupal: oddhill/drupal-8@0.0.5
+  node: circleci/node@4.1.0
+  php: circleci/php@1.1.0
 
 ##
-# Aliases
+# Executors
 ##
 
-# Alias with defaults used in most steps
-defaults: &defaults
-  docker:
-    - image: circleci/php:7.2-cli-node-browsers
-  working_directory: ~/repo
+executors:
+  node:
+    docker:
+      - image: cimg/node:14.15.4
+  php:
+    docker:
+      - image: cimg/php:7.4.14
 
-# Alias to restore cache
-restore_cache: &restore_cache
-  keys:
-    - v1-composer-{{ checksum "composer.lock" }}
-    # fallback to using the latest cache if no exact match is found
-    - v1-composer-
+##
+# Commands
+##
 
-# Alias to save cache
-save_cache: &save_cache
-  key: v1-composer-{{ checksum "composer.lock" }}
-  paths:
-    - vendor
-    - public/core
-    - public/libraries
-    - public/modules/contrib
-    - public/profiles/contrib
-    - public/themes/contrib
+commands:
+  install-node-dependencies:
+    description: Installing theme dependencies
+    parameters:
+      cache-version:
+        default: v1
+        description: >-
+          Change the default cache version if you need to clear the cache for any
+          reason.
+        type: string
+      theme-name:
+        default: oddbaby
+        type: string
+    steps:
+      - node/install-packages:
+          app-dir: ./public/themes/custom/<<parameters.theme-name>>
+          pkg-manager: yarn
+          cache-key: yarn.lock
 
-# Update composer and install dependencies
-composer_dependencies: &composer_dependencies
-  name: Updating composer and installing dependencies
-  command: |
-    sudo composer self-update
-    composer install -n --prefer-dist --ignore-platform-reqs
+  install-composer-dependencies:
+    description: Install project dependencies
+    parameters:
+      cache-version:
+        default: v1
+        description: >-
+          Change the default cache version if you need to clear the cache for any
+          reason.
+        type: string
+    steps:
+      - restore_cache:
+          keys:
+            - <<parameters.cache-version>>-composer-{{ checksum "composer.lock" }}
+      - run:
+          name: Updating composer
+          command: sudo composer self-update --2
+      - run:
+          name: Installing composer dependencies
+          command: composer install --no-interaction --prefer-dist
+      - save_cache:
+          key: <<parameters.cache-version>>-composer-{{ checksum "composer.lock" }}
+          paths:
+            - drush/contrib
+            - public/core
+            - public/libraries
+            - public/modules/contrib
+            - public/profiles/contrib
+            - public/themes/contrib
+            - vendor
 
 ##
 # Jobs
 ##
 
 jobs:
-  # Install composer dependencies
-  dependencies:
-    <<: *defaults
+
+  # Install project dependencies
+  project_dependencies:
+    executor: php
     steps:
       - checkout
-      - restore_cache: *restore_cache
-      - run: *composer_dependencies
-      - save_cache: *save_cache
+      - install-composer-dependencies
 
   # Check coding standards with PHPCS
-  phpcs:
-    <<: *defaults
+  project_phpcs:
+    executor: php
     steps:
       - checkout
-      - restore_cache: *restore_cache
+      - install-composer-dependencies
       - drupal/phpcs
 
   # Deploy to testing
-  testing:
-    <<: *defaults
+  deploy_testing:
+    executor: php
     steps:
       - checkout
-      - restore_cache: *restore_cache
+      - install-composer-dependencies
       - deploy/ssh:
           hostname: stage.example.com
           remote-path: /var/www/stage.example.com
@@ -85,11 +116,11 @@ jobs:
           alias: testing
 
   # Deploy to production
-  production:
-    <<: *defaults
+  deploy_production:
+    executor: php
     steps:
       - checkout
-      - restore_cache: *restore_cache
+      - install-composer-dependencies
       - deploy/ssh:
           hostname: www.example.com
           remote-path: /var/www/www.example.com
@@ -105,17 +136,17 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - dependencies
-      - phpcs:
+      - project_dependencies
+      - project_phpcs:
           requires:
             - dependencies
-      - testing:
+      - deploy_testing:
           requires:
             - phpcs
           filters:
             branches:
               only: develop
-      - production:
+      - deploy_production:
           requires:
             - phpcs
           filters:
