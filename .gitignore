@@ -2,7 +2,6 @@
 .DS_Store
 
 # Ignore folders
-/.docker-sync
 /.gitattributes
 /.idea
 /.vscode
