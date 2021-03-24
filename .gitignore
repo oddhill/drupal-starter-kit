@@ -3,6 +3,7 @@
 
 # Ignore folders
 /.docker-sync
+/.gitattributes
 /.idea
 /.vscode
 /drush/contrib
