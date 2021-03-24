@@ -1,4 +1,4 @@
-# Odd Drupal 8 starter kit, by Odd Hill AB
+# Odd Drupal 9 starter kit, by Odd Hill AB
 
 This is a starter kit for creating new sites for Drupal 8 with a composer
 based workflow, this project is used at [Odd Hill](http://www.oddhill.se/)
@@ -7,28 +7,33 @@ when creating new projects.
 ## Notable features
 
 - Uses [vlucas/phpdotenv](vlucas/phpdotenv) to load local environment configuration.
-- Automatically updates the drupal scaffolding with [drupal-composer/drupal-scaffold](https://github.com/drupal-composer/drupal-scaffold).
+- Uses the recommended Drupal composer packages to scaffold the project.
+
+## Requirements
+
+- [Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx)
+- PHP 7.4
+- Apache/Nginx
+- MySQL
 
 ## Getting started
 
-First you need to [install composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
+### Create
 
-After you have installed composer or if you already have composer installed
-you can run the following command to get a copy of the starter kit:
+Start by making sure that you have met all the requirements for using the
+starter kit. You can then run the following command to create a new project
+based on this repository:
 
 ```
 composer create-project oddhill/drupal-starter-kit ./project-dir --stability dev --no-interaction
 ```
 
-You should now be able to run the project with your local webserver or with the
-supplied Docker configuration.
+### Prepare
 
-Depending on how you want to run the project you may have to change the default
-settings provided in the `.env` file. 
+1. Copy settings.php located in the examples folder to the `public/sites/default` directory.
+2. Copy the `.env.default` file located in the project root and rename it to `.env`.
+3. Upate the environment variables in the `.env` file to match the settings for your local environment.
 
-## Composer scripts
+### Install
 
-The starter kit includes a few commands that are used when first installing
-with composers `create-project`. You can get a list of all the available
-commands by running `composer` in a terminal or have a look at the
-scripts section in the supplied composer.json file. 
+TODO
