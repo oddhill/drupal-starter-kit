@@ -1,14 +1,8 @@
 {
     "name": "oddhill/drupal-starter-kit",
-    "description": "Starter kit when creating a new site based on Drupal 8.",
+    "description": "Starter kit when creating a new site based on Drupal 9.",
     "type": "project",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Christoffer Palm <christoffer.palm@oddhill.se>",
-            "role": "Developer"
-        }
-    ],
     "repositories": [
         {
             "type": "composer",
@@ -20,49 +14,43 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.0.22"
+            "php": "7.4"
         }
     },
     "require": {
-        "drupal/core": "^8.0",
+        "composer/installers": "^1.9",
+        "drupal/core-composer-scaffold": "^9.0",
+        "drupal/core-project-message": "^9.0",
+        "drupal/core-recommended": "^9.0",
         "oddhill/oddprofile": "^2.0",
-        "vlucas/phpdotenv": "^2.0"
+        "vlucas/phpdotenv": "^5.2"
     },
     "require-dev": {
-        "composer/composer": "^1.0",
-        "composer/installers": "^1.0",
-        "cweagans/composer-patches": "^1.0",
-        "drupal-composer/drupal-scaffold": "^2.0",
-        "drush/drush": "^9.0",
-        "drupal/coder": "^8.0"
+        "cweagans/composer-patches": "^1.7",
+        "drush/drush": "^10.0",
+        "drupal/coder": "^8.3"
     },
     "conflict": {
         "drupal/drupal": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "autoload": {
-      "psr-4": {
-        "OddDrupal\\": "scripts/odddrupal/"
-      }
-    },
-    "scripts": {
-        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-        "key-generate": "OddDrupal\\KeyGenerator::generateAppKey",
-        "create-files": "OddDrupal\\InstallationManager::createRequiredFiles",
-        "post-create-project-cmd": [
-            "OddDrupal\\InstallationManager::createRequiredFiles",
-            "OddDrupal\\KeyGenerator::generateAppKey"
-        ]
-    },
+    "scripts": {},
     "extra": {
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "public/"
+            }
+        },
         "installer-paths": {
             "public/core": ["type:drupal-core"],
             "public/libraries/{$name}": ["type:drupal-library"],
             "public/modules/contrib/{$name}": ["type:drupal-module"],
             "public/profiles/contrib/{$name}": ["type:drupal-profile"],
             "public/themes/contrib/{$name}": ["type:drupal-theme"],
-            "drush/contrib/{$name}": ["type:drupal-drush"]
+            "drush/contrib/{$name}": ["type:drupal-drush"],
+            "public/modules/custom/{$name}": ["type:drupal-custom-module"],
+            "public/themes/custom/{$name}": ["type:drupal-custom-theme"]
         }
     }
 }
