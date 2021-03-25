@@ -8,6 +8,7 @@ when creating new projects.
 
 - Uses [vlucas/phpdotenv](vlucas/phpdotenv) to load local environment configuration.
 - Uses the recommended Drupal composer packages to scaffold the project.
+- Easy deployment through SSH with CircleCI.
 
 ## Requirements
 
@@ -36,4 +37,8 @@ composer create-project oddhill/drupal-starter-kit ./project-dir --stability dev
 
 ### Install
 
-TODO
+When loading the website for the first time you will get an error because Drupal has not been installed and the database is empty.
+
+To install Drupal you will have to open to the `/install.php` file and then go through the installation process.
+
+You now have a new Drupal site installed and configured to use environment variables, our custom profile, basic deployment and more.
