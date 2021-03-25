@@ -5,18 +5,18 @@
  * Contains site specific settings.
  */
 
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\Debug;
 
 /**
  * Load environment variables.
  */
-$dotenv = new Dotenv\Dotenv($app_root . '/../');
+$dotenv = Dotenv\Dotenv::createImmutable($app_root . '/../', '.env');
 $dotenv->load();
 
 /**
  * Enable improved debugging in the development environment.
  */
-if (getenv('APP_ENV') === 'development') {
+if ($_ENV['APP_ENV'] === 'development') {
   Debug::enable();
 }
 
@@ -24,11 +24,11 @@ if (getenv('APP_ENV') === 'development') {
  * Database settings.
  */
 $databases['default']['default'] = [
-  'database' => getenv('DB_DATABASE'),
-  'username' => getenv('DB_USERNAME'),
-  'password' => getenv('DB_PASSWORD'),
-  'host' => getenv('DB_HOST'),
-  'port' => getenv('DB_PORT'),
+  'database' => $_ENV['DB_DATABASE'],
+  'username' => $_ENV['DB_USERNAME'],
+  'password' => $_ENV['DB_PASSWORD'],
+  'host' => $_ENV['DB_HOST'],
+  'port' => $_ENV['DB_PORT'],
   'prefix' => '',
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
