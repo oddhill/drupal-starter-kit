@@ -16,7 +16,7 @@ $dotenv->load();
 /**
  * Enable improved debugging in the development environment.
  */
-if ($_ENV['APP_ENV'] === 'development') {
+if ($_SERVER['APP_ENV'] === 'development') {
   Debug::enable();
 }
 
@@ -24,11 +24,11 @@ if ($_ENV['APP_ENV'] === 'development') {
  * Database settings.
  */
 $databases['default']['default'] = [
-  'database' => $_ENV['DB_DATABASE'],
-  'username' => $_ENV['DB_USERNAME'],
-  'password' => $_ENV['DB_PASSWORD'],
-  'host' => $_ENV['DB_HOST'],
-  'port' => $_ENV['DB_PORT'],
+  'database' => $_SERVER['DB_DATABASE'],
+  'username' => $_SERVER['DB_USERNAME'],
+  'password' => $_SERVER['DB_PASSWORD'],
+  'host' => $_SERVER['DB_HOST'],
+  'port' => $_SERVER['DB_PORT'],
   'prefix' => '',
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
@@ -41,9 +41,9 @@ $databases['default']['default'] = [
  * than production, but you'll need to copy these to settings.local.php in order
  * to reroute to an address which you've got access to.
  */
-if (getenv('APP_ENV') !== 'production') {
+if ($_SERVER['APP_ENV'] !== 'production') {
   $config['reroute_email.settings']['reroute_email_enable'] = TRUE;
-  $config['reroute_email.settings']['reroute_email_address'] = getenv('REROUTE_EMAIL_ADDRESS');
+  $config['reroute_email.settings']['reroute_email_address'] = $_SERVER['REROUTE_EMAIL_ADDRESS'];
   $config['reroute_email.settings']['reroute_email_enable_message'] = TRUE;
 }
 
@@ -72,7 +72,7 @@ $settings['config_sync_directory'] = $app_root . '/../config';
  * outside your document root; you should also ensure that this file is not
  * stored with backups of your database.
  */
-$settings['hash_salt'] = getenv('APP_KEY');
+$settings['hash_salt'] = $_SERVER['APP_KEY'];
 
 /**
  * The active installation profile.
