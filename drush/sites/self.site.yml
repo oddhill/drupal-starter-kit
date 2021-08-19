@@ -10,12 +10,18 @@
 
 testing:
   host: example.com
-  root: /var/www/html
-  uri: http://example.com
+  root: /var/www/test.example.com
+  uri: http://test.example.com
+  user: root
+
+staging:
+  host: example.com
+  root: /var/www/stage.example.com
+  uri: http://stage.example.com
   user: root
 
 production:
   host: example.com
-  root: /var/www/html
-  uri: http://example.com
+  root: /var/www/www.example.com
+  uri: http://www.example.com
   user: root
