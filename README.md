@@ -1,4 +1,4 @@
-# Odd Drupal 9 starter kit, by Odd Hill AB
+# Drupal 9 starter kit, by Odd Hill AB
 
 This is a starter kit for creating new sites for Drupal with a composer
 based workflow, this project is used at [Odd Hill](http://www.oddhill.se/)
