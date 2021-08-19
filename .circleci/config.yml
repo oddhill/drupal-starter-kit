@@ -1,0 +1,390 @@
+##
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+##
+
+version: 2.1
+
+##
+# Parameters
+##
+
+parameters:
+  theme-directory:
+    type: string
+    default: ./public/themes/oddbaby
+
+##
+# Orbs
+##
+
+orbs:
+  node: circleci/node@4.2.0
+  php: circleci/php@1.1.0
+
+##
+# Executors
+##
+
+executors:
+  node:
+    docker:
+      - image: cimg/node:14.16.1
+  php:
+    docker:
+      - image: cimg/php:8.0.5
+
+##
+# Commands
+##
+
+commands:
+  install-theme-dependencies:
+    description: Installing theme dependencies
+    parameters:
+      cache-version:
+        default: v1
+        description: >-
+          Change the default cache version if you need to clear the cache for any
+          reason.
+        type: string
+      theme-name:
+        default: oddbaby
+        type: string
+    steps:
+      - node/install-packages:
+          pkg-manager: yarn
+          app-dir: << pipeline.parameters.theme-directory >>
+
+  install-project-dependencies:
+    description: Install project dependencies
+    parameters:
+      cache-version:
+        default: v1
+        description: >-
+          Change the default cache version if you need to clear the cache for any
+          reason.
+        type: string
+    steps:
+      - restore_cache:
+          keys:
+            - <<parameters.cache-version>>-composer-{{ checksum "composer.lock" }}
+      - run:
+          name: Updating composer
+          command: sudo composer self-update --2
+      - run:
+          name: Installing composer dependencies
+          command: composer install --no-interaction --prefer-dist
+      - save_cache:
+          key: <<parameters.cache-version>>-composer-{{ checksum "composer.lock" }}
+          paths:
+            - drush/contrib
+            - public/core
+            - public/libraries
+            - public/modules/contrib
+            - public/profiles/contrib
+            - public/themes/contrib
+            - vendor
+
+  deploy-ssh:
+    description: |
+      Deploys code with SSH and rsync. Allows some files and folders on the
+      remote to be ignored as to not overwrite important files and folders
+      like configuration and uploads. The ignore file must exist and is
+      not an optional file, the name of the file may be changed
+      through the ignore-file parameter.
+    parameters:
+      hostname:
+        description: The hostname of the server to connect to with SSH.
+        type: string
+      ignore-file:
+        description: |
+          The file to use for excluding/ignoring files and folders when syncing
+          to the remote server. This file is not optional and must exist.
+        type: string
+        default: .rsyncignore
+      local-path:
+        description: |
+          The local path of the content to sync to the remote, defaults to the
+          current directory.
+        type: string
+        default: ./
+      port:
+        description: The port to access SSH on the remote machine.
+        type: integer
+        default: 22
+      remote-path:
+        description: |
+          The remote path to the location of where the files should be syncted to.
+        type: string
+      user:
+        description: The username of the SSH user.
+        type: string
+    steps:
+      - add_ssh_keys
+      - run:
+          name: Preparing for deployment
+          command: |
+            sudo apt update && sudo apt install openssh-client rsync
+            ssh-keyscan -p << parameters.port >> -H << parameters.hostname >> >> ~/.ssh/known_hosts
+      - run:
+          name: Deploying files
+          command: |
+            rsync -az \
+            --force \
+            --delete \
+            --exclude-from=<< parameters.ignore-file >> \
+            -e 'ssh -p << parameters.port >>' << parameters.local-path >> << parameters.user >>@<< parameters.hostname >>:<< parameters.remote-path >>
+
+  drush-post-deploy:
+    description: Runs common post-deploy commands for the specified alias.
+    parameters:
+      alias:
+        description: The alias to use when running the Drush commands.
+        type: string
+      hostname:
+        description: The hostname of the server to connect to with SSH.
+        type: string
+      port:
+        description: The port to access SSH on the remote machine.
+        type: integer
+        default: 22
+    steps:
+      - add_ssh_keys
+      - run:
+          name: Preparing for post deployment commands
+          command: |
+            sudo apt update && sudo apt install openssh-client rsync
+            ssh-keyscan -p << parameters.port >> -H << parameters.hostname >> >> ~/.ssh/known_hosts
+      - run: ./vendor/bin/drush @<< parameters.alias >> cache-rebuild
+      - run: ./vendor/bin/drush @<< parameters.alias >> updatedb -y
+      - run: ./vendor/bin/drush @<< parameters.alias >> config-import -y
+      - run: ./vendor/bin/drush @<< parameters.alias >> cache-rebuild
+
+  drupal-phpcs:
+    description: |
+      Runs PHP code sniffer with the configured settings. Defaults to running
+      the Drupal coding standard code sniffer on custom modules and only on
+      files containing PHP code.
+
+      This command expects both the PHP CodeSniffer and Drupal coder package
+      to be installed with composer, the command will not install these
+      packages for you.
+    parameters:
+      extensions:
+        description: |
+          Extensions to run the sniffs on, the defaults are common files that
+          may include PHP code.
+        type: string
+        default: "php,module,theme"
+      ignore:
+        description: |
+          Files and folders to ignore when running the sniffs, the default will
+          ignore common folders that may exist in a theme or module that is
+          not custom code like build files and node modules.
+        type: string
+        default: "node_modules,build"
+      paths:
+        description: Paths to run the sniffs on.
+        type: string
+        default: "public/modules/custom"
+      standard:
+        description: |
+          The code standard to use when sniffing. This will default to the
+          ruleset provided by the Drupal coder module.
+        type: string
+        default: "Drupal"
+    steps:
+      - run:
+          name: "Running PHP CodeSniffer"
+          command: |
+            mkdir -p ~/phpcs
+            vendor/bin/phpcs --standard=<< parameters.standard >> --extensions=<< parameters.extensions >> --ignore=<< parameters.ignore >> --report-junit=$HOME/phpcs/junit.xml << parameters.paths >>
+      - store_test_results:
+          path: ~/phpcs
+      - store_artifacts:
+          path: ~/phpcs
+
+##
+# Jobs
+##
+
+jobs:
+  # Install project dependencies
+  project_dependencies:
+    executor: php
+    steps:
+      - checkout
+      - install-project-dependencies
+
+  # Check coding standards with PHPCS
+  project_phpcs:
+    executor: php
+    steps:
+      - checkout
+      - install-project-dependencies
+      - drupal-phpcs
+
+  # Install theme dependencies.
+  theme_dependencies:
+    executor: node
+    steps:
+      - checkout
+      - install-theme-dependencies
+
+  # Check theme code with ESLint
+  theme_eslint:
+    executor: node
+    steps:
+      - checkout
+      - install-theme-dependencies
+      - run:
+          name: Lint theme code with ESLint
+          command: |
+            cd << pipeline.parameters.theme-directory >>
+            yarn eslint-ci
+      - store_test_results:
+          path: << pipeline.parameters.theme-directory >>/reports
+      - store_artifacts:
+          path: << pipeline.parameters.theme-directory >>/reports
+
+  # Check theme styling with Stylelint
+  theme_stylelint:
+    executor: node
+    steps:
+      - checkout
+      - install-theme-dependencies
+      - run:
+          name: Lint theme styling with Stylelint
+          command: |
+            cd << pipeline.parameters.theme-directory >>
+            mkdir reports
+            yarn stylelint-ci
+      - store_test_results:
+          path: << pipeline.parameters.theme-directory >>/reports
+      - store_artifacts:
+          path: << pipeline.parameters.theme-directory >>/reports
+
+  # Builds the theme.
+  theme_build:
+    executor: node
+    steps:
+      - checkout
+      - install-theme-dependencies
+      - run:
+          name: Build theme
+          command: |
+            cd << pipeline.parameters.theme-directory >>
+            yarn build
+      - persist_to_workspace:
+          root: << pipeline.parameters.theme-directory >>
+          paths:
+            - build
+
+  # Deploy to testing
+  deploy_testing:
+    executor: php
+    steps:
+      - checkout
+      - install-project-dependencies
+      - attach_workspace:
+          at: << pipeline.parameters.theme-directory >>
+      - deploy-ssh:
+          hostname: test.example.com
+          remote-path: /var/www/test.example.com
+          user: root
+      - drush-post-deploy:
+          hostname: test.example.com
+          alias: testing
+
+  # Deploy to staging
+  deploy_staging:
+    executor: php
+    steps:
+      - checkout
+      - install-project-dependencies
+      - attach_workspace:
+          at: << pipeline.parameters.theme-directory >>
+      - deploy-ssh:
+          hostname: stage.example.com
+          remote-path: /var/www/stage.example.com
+          user: root
+      - drush-post-deploy:
+          hostname: stage.example.com
+          alias: staging
+
+  # Deploy to production
+  deploy_production:
+    executor: php
+    steps:
+      - checkout
+      - install-project-dependencies
+      - attach_workspace:
+          at: << pipeline.parameters.theme-directory >>
+      - deploy-ssh:
+          hostname: www.example.com
+          remote-path: /var/www/www.example.com
+          user: root
+      - drush-post-deploy:
+          hostname: www.example.com
+          alias: production
+
+##
+# Workflows
+##
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - project_dependencies
+      - theme_dependencies
+      - project_phpcs:
+          requires:
+            - project_dependencies
+
+      - theme_eslint:
+          requires:
+            - theme_dependencies
+
+      - theme_stylelint:
+          requires:
+            - theme_dependencies
+
+      - theme_build:
+          requires:
+            - theme_eslint
+            - theme_stylelint
+
+      - approve_deployment:
+          type: approval
+          requires:
+            - project_phpcs
+            - theme_build
+          filters:
+            branches:
+              only: master
+
+      - deploy_testing:
+          requires:
+            - project_phpcs
+            - theme_build
+          filters:
+            branches:
+              only: develop
+
+      - deploy_staging:
+          requires:
+            - project_phpcs
+            - theme_build
+          filters:
+            branches:
+              only: /^release/.*/
+
+      - deploy_production:
+          requires:
+            - approve_deployment
+          filters:
+            branches:
+              only: master
