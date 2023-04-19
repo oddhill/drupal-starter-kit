@@ -1,4 +1,4 @@
-# Drupal 9 starter kit, by Odd Hill AB
+# Drupal 10 starter kit, by Odd Hill AB
 
 This is a starter kit for creating new sites for Drupal with a composer
 based workflow, this project is used at [Odd Hill](http://www.oddhill.se/)
@@ -20,10 +20,9 @@ You might have to make changes to the CircleCI configuration if you decide to
 use other versions.
 
 - [Composer 2.0](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx)
-- PHP 8.0
+- PHP 8.1
 - Apache
 - MySQL 5.7 or 8.0
-- Node.js 14
 
 ## Getting started
 
@@ -97,11 +96,11 @@ After the site has been deployed for the first time you will have to perform
 the following steps to get the site up and running.
 
 1. Copy the `.env.default` file, rename it to `.env` and then edit it and set
-the correct variables for the environment.
+   the correct variables for the environment.
 2. Create a `.htaccess` file in the `public` folder and paste the contens from
-your local copy of the `.htaccess` file. This is required since the file is
-ignored by rsync during the deployment step.
+   your local copy of the `.htaccess` file. This is required since the file is
+   ignored by rsync during the deployment step.
 3. Create the `public/sites/default/files` directory and make sure that the
-permissions for this folder is set to 775.
+   permissions for this folder is set to 775.
 4. Go to the site by visiting `example.domain/core/install.php` and you should
-now see the installation page. After this is done the site is ready!
+   now see the installation page. After this is done the site is ready!
