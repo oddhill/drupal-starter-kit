@@ -1,0 +1,5 @@
+parameters:
+	level: 8
+	paths:
+		- public/modules/custom
+		- public/themes/custom
