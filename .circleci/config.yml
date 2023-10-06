@@ -190,6 +190,22 @@ jobs:
       - store_artifacts:
           path: ./reports
 
+  # Statically analyse code with PHPStan
+  project_phpstan:
+    executor: php
+    steps:
+      - checkout
+      - install-project-dependencies
+      - run:
+          name: Analysing code
+          command: |
+            mkdir ./reports
+            ./vendor/bin/phpstan analyse --error-format=junit > ./reports/phpstan.xml
+      - store_test_results:
+          path: ./reports
+      - store_artifacts:
+          path: ./reports
+
   # Install theme dependencies.
   theme_dependencies:
     executor: node
@@ -310,6 +326,10 @@ workflows:
           requires:
             - project_dependencies
 
+      - project_phpstan:
+          requires:
+            - project_dependencies
+
       - theme_eslint:
           requires:
             - theme_dependencies
@@ -327,6 +347,7 @@ workflows:
           type: approval
           requires:
             - project_phpcs
+            - project_phpstan
             - theme_build
           filters:
             branches:
@@ -335,6 +356,7 @@ workflows:
       - deploy_testing:
           requires:
             - project_phpcs
+            - project_phpstan
             - theme_build
           filters:
             branches:
@@ -343,6 +365,7 @@ workflows:
       - deploy_staging:
           requires:
             - project_phpcs
+            - project_phpstan
             - theme_build
           filters:
             branches:

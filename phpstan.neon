@@ -3,3 +3,5 @@ parameters:
 	paths:
 		- public/modules/custom
 		- public/themes/custom
+  excludePaths:
+    - public/themes/custom/*/node_modules/*
