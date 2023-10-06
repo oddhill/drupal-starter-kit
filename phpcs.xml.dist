@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Drupal Starter Kit" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+  <description>PHP CodeSniffer configuration for Drupal projects.</description>
+
+  <!-- Check all custom modules and themes. -->
+  <file>public/modules/custom</file>
+  <file>public/themes/custom</file>
+
+  <!-- Do not check anything matching this pattern. -->
+  <exclude-pattern>node_modules</exclude-pattern>
+
+  <!-- Check files with these extensions. -->
+  <arg name="extensions" value="php,module,inc,install,test,profile,theme,info,yml" />
+
+  <!-- The version of Drupal core. -->
+  <config name="drupal_core_version" value="10" />
+
+  <!-- Use the Drupal coder rules but exclude some. -->
+  <rule ref="Drupal">
+    <exclude name="Drupal.Commenting.ClassComment" />
+    <exclude name="Drupal.Commenting.DocComment" />
+    <exclude name="Drupal.Commenting.DataTypeNamespace" />
+    <exclude name="Drupal.Commenting.FileComment" />
+    <exclude name="Drupal.Commenting.FunctionComment" />
+    <exclude name="Drupal.Commenting.HookComment" />
+    <exclude name="Drupal.Commenting.VariableComment" />
+  </rule>
+
+  <!-- Additional rules to use. -->
+  <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+    <properties>
+      <property name="spacesCountAroundEqualsSign" value="0" />
+    </properties>
+  </rule>
+</ruleset>

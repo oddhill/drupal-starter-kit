@@ -162,50 +162,6 @@ commands:
       - run: ./vendor/bin/drush @<< parameters.alias >> config-import -y
       - run: ./vendor/bin/drush @<< parameters.alias >> cache-rebuild
 
-  drupal-phpcs:
-    description: |
-      Runs PHP code sniffer with the configured settings. Defaults to running
-      the Drupal coding standard code sniffer on custom modules and only on
-      files containing PHP code.
-
-      This command expects both the PHP CodeSniffer and Drupal coder package
-      to be installed with composer, the command will not install these
-      packages for you.
-    parameters:
-      extensions:
-        description: |
-          Extensions to run the sniffs on, the defaults are common files that
-          may include PHP code.
-        type: string
-        default: "php,module,theme"
-      ignore:
-        description: |
-          Files and folders to ignore when running the sniffs, the default will
-          ignore common folders that may exist in a theme or module that is
-          not custom code like build files and node modules.
-        type: string
-        default: "node_modules,build"
-      paths:
-        description: Paths to run the sniffs on.
-        type: string
-        default: "public/modules/custom"
-      standard:
-        description: |
-          The code standard to use when sniffing. This will default to the
-          ruleset provided by the Drupal coder module.
-        type: string
-        default: "Drupal"
-    steps:
-      - run:
-          name: "Running PHP CodeSniffer"
-          command: |
-            mkdir -p ~/phpcs
-            vendor/bin/phpcs --standard=<< parameters.standard >> --extensions=<< parameters.extensions >> --ignore=<< parameters.ignore >> --report-junit=$HOME/phpcs/junit.xml << parameters.paths >>
-      - store_test_results:
-          path: ~/phpcs
-      - store_artifacts:
-          path: ~/phpcs
-
 ##
 # Jobs
 ##
@@ -224,7 +180,15 @@ jobs:
     steps:
       - checkout
       - install-project-dependencies
-      - drupal-phpcs
+      - run:
+          name: "Running PHP CodeSniffer"
+          command: |
+            mkdir ./reports
+            ./vendor/bin/phpcs --report-junit=./reports/phpcs.xml
+      - store_test_results:
+          path: ./reports
+      - store_artifacts:
+          path: ./reports
 
   # Install theme dependencies.
   theme_dependencies:
@@ -338,8 +302,10 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - project_dependencies
-      - theme_dependencies
+      - project_dependencies: {}
+
+      - theme_dependencies: {}
+
       - project_phpcs:
           requires:
             - project_dependencies
