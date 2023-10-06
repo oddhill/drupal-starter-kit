@@ -49,10 +49,7 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "scripts": {
-        "phpcs": "./vendor/bin/phpcs --standard=Drupal --extensions=php,module,theme --ignore=node_modules,build public/modules/custom",
-        "phpcbf": "./vendor/bin/phpcbf --standard=Drupal --extensions=php,module,theme --ignore=node_modules,build public/modules/custom"
-    },
+    "scripts": {},
     "extra": {
         "drupal-scaffold": {
             "locations": {
