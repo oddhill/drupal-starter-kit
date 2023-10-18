@@ -28,7 +28,6 @@ jobs:
         run: |
           pwd
           ls -al
-          ls -al ${{ github.workspace }}
       - uses: php-actions/composer@v6
         with:
           container_workdir: /__w/drupal-starter-kit/drupal-starter-kit
