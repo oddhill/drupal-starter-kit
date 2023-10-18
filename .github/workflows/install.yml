@@ -23,7 +23,7 @@ jobs:
         volumes:
           - ./:/var/www/html
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Log directory contents
         run: |
           pwd
