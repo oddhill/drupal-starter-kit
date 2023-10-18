@@ -25,5 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: php-actions/composer@v6
+      - name: Log directory contents
+        run: ls -al
       - name: Test site installation
         run: vendor/bin/drush site:install oddprofile --db-url=mysql://root@127.0.0.1:3306/drupal
