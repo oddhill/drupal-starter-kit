@@ -31,7 +31,7 @@ jobs:
           ls -al ${{ github.workspace }}
       - uses: php-actions/composer@v6
         with:
-          container_workdir: ${{ github.workspace }}
+          container_workdir: /__w/drupal-starter-kit/drupal-starter-kit
           php_version: 8.2
       - name: Test site installation
         run: vendor/bin/drush site:install oddprofile --db-url=mysql://root@127.0.0.1:3306/drupal
