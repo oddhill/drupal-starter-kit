@@ -32,5 +32,6 @@ jobs:
         with:
           container_workdir: /__w/drupal-starter-kit/drupal-starter-kit
           php_version: 8.2
+          working_dir: /__w/drupal-starter-kit/drupal-starter-kit
       - name: Test site installation
         run: vendor/bin/drush site:install oddprofile --db-url=mysql://root@127.0.0.1:3306/drupal
