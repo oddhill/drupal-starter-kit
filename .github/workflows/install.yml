@@ -24,6 +24,8 @@ jobs:
           MARIADB_DATABASE: drupal
           MARIADB_ROOT_PASSWORD: password
           MARIADB_USER: root
+        ports:
+          - 3306:3306
 
     steps:
       - name: Checkout code
