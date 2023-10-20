@@ -36,7 +36,7 @@ jobs:
           extensions: gd, mbstring, pdo, pdo_mysql
 
       - name: Install dependencies
-        uses: php-actions/composer@v6
+        run: composer install --no-interaction --prefer-dist
 
       - name: Install Drupal
         run: vendor/bin/drush site:install oddprofile --db-url=mysql://root:password@127.0.0.1:3306/drupal
