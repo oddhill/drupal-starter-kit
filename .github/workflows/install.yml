@@ -7,31 +7,36 @@ env:
 on:
   push:
     branches: ["master"]
+
   pull_request:
     branches: ["master"]
+
   workflow_dispatch:
 
 jobs:
   install:
     runs-on: ubuntu-latest
-    container: php:8.2-apache
+
     services:
       mariadb:
         image: mariadb:11
         env:
+          MARIADB_DATABASE: drupal
           MARIADB_ROOT_PASSWORD: password
-        volumes:
-          - ./:/var/www/html
+          MARIADB_USER: root
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: gd, mbstring, pdo, pdo_mysql
 
       - name: Install dependencies
-        run: |
-          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-          php -r "if (hash_file('sha384', 'composer-setup.php') === 'e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-          php composer-setup.php
-          php -r "unlink('composer-setup.php');"
-          php composer.phar install --no-interaction --prefer-dist
+        uses: php-actions/composer@v6
 
-      - name: Test site installation
-        run: vendor/bin/drush site:install oddprofile --db-url=mysql://root@127.0.0.1:3306/drupal
+      - name: Install Drupal
+        run: vendor/bin/drush site:install oddprofile --db-url=mysql://root:password@127.0.0.1:3306/drupal
