@@ -24,14 +24,14 @@ jobs:
           - ./:/var/www/html
     steps:
       - uses: actions/checkout@v4
-      - name: Log directory contents
+
+      - name: Install dependencies
         run: |
-          pwd
-          ls -al
-      - uses: php-actions/composer@v6
-        with:
-          container_workdir: /__w/drupal-starter-kit/drupal-starter-kit
-          php_version: 8.2
-          working_dir: /__w/drupal-starter-kit/drupal-starter-kit
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php -r "if (hash_file('sha384', 'composer-setup.php') === 'e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+          php composer-setup.php
+          php -r "unlink('composer-setup.php');"
+          php composer.phar install --no-interaction --prefer-dist
+
       - name: Test site installation
         run: vendor/bin/drush site:install oddprofile --db-url=mysql://root@127.0.0.1:3306/drupal
