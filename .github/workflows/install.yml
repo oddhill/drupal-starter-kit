@@ -37,6 +37,9 @@ jobs:
           php-version: '8.2'
           extensions: gd, mbstring, pdo, pdo_mysql
 
+      - name: Set up PNPM
+        uses: pnpm/action-setup@v2
+
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
