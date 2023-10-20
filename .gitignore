@@ -18,3 +18,7 @@
 # Ignore local environment settings
 .env
 /public/sites/*/settings.local.php
+node_modules/
+/test-results/
+/playwright-report/
+/playwright/.cache/

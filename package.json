@@ -1,0 +1,13 @@
+{
+  "name": "@oddhill/drupal-starter-kit",
+  "description": "Starter kit when creating a new site based on Drupal 9.",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:dev": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.39.0",
+    "@types/node": "^20.8.7"
+  }
+}
