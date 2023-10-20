@@ -59,4 +59,4 @@ jobs:
         run: vendor/bin/drush site:install oddprofile --db-url=mysql://root:password@127.0.0.1:3306/drupal
 
       - name: Run E2E tests
-        run: pnpm test:dev
+        run: pnpm test
