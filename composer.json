@@ -1,6 +1,6 @@
 {
     "name": "oddhill/drupal-starter-kit",
-    "description": "Starter kit when creating a new site based on Drupal 9.",
+    "description": "Starter kit when creating a new site based on Drupal 11.",
     "type": "project",
     "license": "MIT",
     "repositories": [

@@ -1,6 +1,6 @@
 {
   "name": "@oddhill/drupal-starter-kit",
-  "description": "Starter kit when creating a new site based on Drupal 9.",
+  "description": "Starter kit when creating a new site based on Drupal 11.",
   "private": true,
   "packageManager": "pnpm@8.9.2",
   "engines": {
