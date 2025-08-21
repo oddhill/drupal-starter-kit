@@ -4852,16 +4852,16 @@
         },
         {
             "name": "oddhill/oddprofile",
-            "version": "4.1.2",
+            "version": "4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oddhill/drupal-oddprofile.git",
-                "reference": "39feaa928c33211bd610d3f85399868103f3ca1b"
+                "reference": "b22eb2bf3473ec1c043ce2d40b3a9a3f6cf65000"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oddhill/drupal-oddprofile/zipball/39feaa928c33211bd610d3f85399868103f3ca1b",
-                "reference": "39feaa928c33211bd610d3f85399868103f3ca1b",
+                "url": "https://api.github.com/repos/oddhill/drupal-oddprofile/zipball/b22eb2bf3473ec1c043ce2d40b3a9a3f6cf65000",
+                "reference": "b22eb2bf3473ec1c043ce2d40b3a9a3f6cf65000",
                 "shasum": ""
             },
             "require": {
@@ -4899,9 +4899,9 @@
             "description": "The base profile used for all our Drupal sites.",
             "support": {
                 "issues": "https://github.com/oddhill/drupal-oddprofile/issues",
-                "source": "https://github.com/oddhill/drupal-oddprofile/tree/4.1.2"
+                "source": "https://github.com/oddhill/drupal-oddprofile/tree/4.1.3"
             },
-            "time": "2025-08-21T09:45:38+00:00"
+            "time": "2025-08-21T09:59:44+00:00"
         },
         {
             "name": "pear/archive_tar",
