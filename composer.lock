@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39769656de663e1cc467f6f41264ffb6",
+    "content-hash": "5d7a590b600b2ec142a797c22d42a41c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4852,16 +4852,16 @@
         },
         {
             "name": "oddhill/oddprofile",
-            "version": "4.1.1",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oddhill/drupal-oddprofile.git",
-                "reference": "b7f2716e385801b6d9c277de316e7ea2e6ebc5b8"
+                "reference": "39feaa928c33211bd610d3f85399868103f3ca1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oddhill/drupal-oddprofile/zipball/b7f2716e385801b6d9c277de316e7ea2e6ebc5b8",
-                "reference": "b7f2716e385801b6d9c277de316e7ea2e6ebc5b8",
+                "url": "https://api.github.com/repos/oddhill/drupal-oddprofile/zipball/39feaa928c33211bd610d3f85399868103f3ca1b",
+                "reference": "39feaa928c33211bd610d3f85399868103f3ca1b",
                 "shasum": ""
             },
             "require": {
@@ -4899,9 +4899,9 @@
             "description": "The base profile used for all our Drupal sites.",
             "support": {
                 "issues": "https://github.com/oddhill/drupal-oddprofile/issues",
-                "source": "https://github.com/oddhill/drupal-oddprofile/tree/4.1.1"
+                "source": "https://github.com/oddhill/drupal-oddprofile/tree/4.1.2"
             },
-            "time": "2025-08-21T09:39:17+00:00"
+            "time": "2025-08-21T09:45:38+00:00"
         },
         {
             "name": "pear/archive_tar",

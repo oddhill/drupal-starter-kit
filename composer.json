@@ -33,7 +33,7 @@
         "drupal/core-project-message": "^11",
         "drupal/core-recommended": "^11",
         "drush/drush": "^13",
-        "oddhill/oddprofile": "^4.0",
+        "oddhill/oddprofile": "^4.1.2",
         "vlucas/phpdotenv": "^5.5"
     },
     "require-dev": {
