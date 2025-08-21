@@ -1,4 +1,4 @@
-# Drupal 10 starter kit, by Odd Hill AB
+# Drupal 11 starter kit, by Odd Hill AB
 
 This is a starter kit for creating new sites for Drupal with a composer
 based workflow, this project is used at [Odd Hill](http://www.oddhill.se/)
@@ -8,7 +8,7 @@ when creating new projects.
 
 - Uses [vlucas/phpdotenv](vlucas/phpdotenv) to load local environment configuration.
 - Uses the recommended Drupal composer packages to scaffold the project.
-- Easy deployments through SSH with CircleCI.
+- Easy deployments through SSH with GitHub Actions.
 
 ## Requirements
 
@@ -20,9 +20,9 @@ You might have to make changes to the CircleCI configuration if you decide to
 use other versions.
 
 - [Composer 2.0](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx)
-- PHP 8.1
+- PHP 8.3
 - Apache
-- MySQL 5.7 or 8.0
+- MySQL 8.0
 
 ## Getting started
 
@@ -40,7 +40,7 @@ composer create-project oddhill/drupal-starter-kit ./project-dir --stability dev
 
 1. Copy settings.php located in the examples folder to the `public/sites/default`directory.
 2. Copy the `.env.default` file located in the project root and rename it to `.env`.
-3. Upate the environment variables in the `.env` file to match the settings for your local environment.
+3. Update the environment variables in the `.env` file to match the settings for your local environment.
 
 ### Install
 
@@ -56,8 +56,7 @@ variables, our custom profile, basic deployment and more.
 ## Adding a theme
 
 You can use any theme with this starter kit but it's recommended to use our
-starter theme [oddbady](https://github.com/oddhill/drupal-oddbaby) since it
-integrates well with the CircleCI configuration.
+starter theme [oddbady](https://github.com/oddhill/drupal-oddbaby).
 
 ## Deployment
 
