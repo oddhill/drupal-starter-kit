@@ -42,9 +42,9 @@ $databases['default']['default'] = [
  * to reroute to an address which you've got access to.
  */
 if ($_SERVER['APP_ENV'] !== 'production') {
-  $config['reroute_email.settings']['reroute_email_enable'] = TRUE;
-  $config['reroute_email.settings']['reroute_email_address'] = $_SERVER['REROUTE_EMAIL_ADDRESS'];
-  $config['reroute_email.settings']['reroute_email_enable_message'] = TRUE;
+  $config['reroute_email.settings']['enable'] = TRUE;
+  $config['reroute_email.settings']['address'] = $_SERVER['REROUTE_EMAIL_ADDRESS'];
+  $config['reroute_email.settings']['message'] = TRUE;
 }
 
 /**
