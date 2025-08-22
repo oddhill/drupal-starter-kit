@@ -6,10 +6,10 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/| Starter Kit/);
 });
 
-test('has cookie banner', async ({ page }) => {
+test('no front page content', async ({ page }) => {
   await page.goto('/');
 
   await expect(
-    page.getByText('Information about cookies on this website'),
+    page.getByText('No front page content has been created yet.'),
   ).toBeVisible();
 });
