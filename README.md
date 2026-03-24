@@ -58,6 +58,26 @@ variables, our custom profile, basic deployment and more.
 You can use any theme with this starter kit but it's recommended to use our
 starter theme [oddbady](https://github.com/oddhill/drupal-oddbaby).
 
+
+## Image Optimization (AVIF + WebP)
+
+When running this script below the AVIF conversion (with WebP fallback) will be added to all image styles. 
+The recommended workflow is:
+
+1. **During development**: Create and configure all image styles as needed
+2. **When ready**: Run one script to optimize all image styles
+
+```bash
+# Optimize all image styles with AVIF+WebP (run when site is ready)
+./scripts/enable-webp.sh
+
+# Or manually:
+drush en webp -y
+drush image-styles:optimize
+drush cr
+```
+
+
 ## Deployment
 
 Deployment is handled through CircleCI. The deployment script only supports
